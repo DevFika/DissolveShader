@@ -1,0 +1,57 @@
+[gd_scene load_steps=10 format=3 uid="uid://pii4jnada7dj"]
+
+[ext_resource type="Shader" path="res://dissolve.gdshader" id="1_hcdcc"]
+[ext_resource type="Script" path="res://mesh_dissolve.tres.gd" id="2_s3b1m"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2jugq"]
+sky_top_color = Color(0.384314, 0.454902, 0.54902, 1)
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_gsk3i"]
+sky_material = SubResource("ProceduralSkyMaterial_2jugq")
+
+[sub_resource type="Environment" id="Environment_a3fm2"]
+background_mode = 2
+background_color = Color(0.654902, 0, 0, 1)
+sky = SubResource("Sky_gsk3i")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_8hgtt"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_afnah"]
+seamless = true
+noise = SubResource("FastNoiseLite_8hgtt")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xdjkm"]
+render_priority = 0
+shader = ExtResource("1_hcdcc")
+shader_parameter/base_color = Color(0.239216, 0.537255, 0.866667, 1)
+shader_parameter/inside_color = Color(0, 0, 0, 1)
+shader_parameter/dissolve_amount = 0.597
+shader_parameter/glow_color = Color(1, 0.368627, 0, 1)
+shader_parameter/glow_intensity = 10.64
+shader_parameter/glow_border_width = 0.008
+shader_parameter/glow_border_smoothness = 0.031
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_afnah")
+
+[sub_resource type="SphereMesh" id="SphereMesh_5fqm0"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_a3fm2")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 5.34013, 0, 0)
+shadow_enabled = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.815673, 0, 0.578513, 0, 1, 0, -0.578513, 0, 0.815673, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_xdjkm")
+mesh = SubResource("SphereMesh_5fqm0")
+script = ExtResource("2_s3b1m")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.55132)
